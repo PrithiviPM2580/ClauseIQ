@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "ClauseIQ is an AI-powered tool that analyzes and summarizes contracts, extracting key clauses, risks, and obligations. It streamlines contract review, saves time, and makes legal documents easier to understand.",
   "keywords": [
-    "[\"ai\"",
-    "\"contract\"",
-    "\"legal\"",
-    "\"clause\"",
-    "\"review\"",
-    "\"risk\"",
-    "\"docs\"]"
+    "ai",
+    "contract",
+    "legal",
+    "clause",
+    "review",
+    "risk",
+    "docs"
   ],
   "homepage": "https://github.com/PrithiviPM2580/ClauseIQ#readme",
   "bugs": {

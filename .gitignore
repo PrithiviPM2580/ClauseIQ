@@ -1,0 +1,41 @@
+# dependencies
+node_modules/
+
+# environment variables
+.env
+.env.*
+!.env.example
+
+# build outputs
+dist/
+build/
+
+# system files
+.DS_Store
+
+# test coverage
+coverage/
+
+# editor/project files
+.vscode/
+.idea/
+
+# logs
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# typescript
+*.tsbuildinfo
+
+# misc caches
+*.local
+*.cache/
+*.history/
+*.eslintcache
