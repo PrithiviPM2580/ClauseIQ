@@ -9,6 +9,10 @@ const envs = {
   NODE_ENV: process.env.NODE_ENV,
   LOCAL_URL: process.env.LOCAL_URL,
   LOG_LEVEL: process.env.LOG_LEVEL,
+  JWT_ACCESS_TOKEN_SECRET: process.env.JWT_ACCESS_TOKEN_SECRET,
+  JWT_REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET,
+  JWT_ACCESS_TOKEN_EXPIRATION: process.env.JWT_ACCESS_TOKEN_EXPIRATION,
+  JWT_REFRESH_TOKEN_EXPIRATION: process.env.JWT_REFRESH_TOKEN_EXPIRATION,
 };
 
 const config = validate(envSchema, envs);

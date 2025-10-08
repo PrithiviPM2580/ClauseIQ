@@ -18,6 +18,16 @@ export const envSchema = z.object({
     .default('development'),
   LOCAL_URL: z.url().default('http://localhost:3000'),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+  JWT_ACCESS_TOKEN_SECRET: z.string().min(1),
+  JWT_REFRESH_TOKEN_SECRET: z.string().min(1),
+  JWT_ACCESS_TOKEN_EXPIRATION: z
+    .string()
+    .regex(/^\d+(s|m|h|d)$/, 'Must be in format like 15m, 1h, 7d')
+    .default('15m'),
+  JWT_REFRESH_TOKEN_EXPIRATION: z
+    .string()
+    .regex(/^\d+(s|m|h|d)$/, 'Must be in format like 15m, 1h, 7d')
+    .default('7d'),
 });
 
 export type Env = z.infer<typeof envSchema>;
