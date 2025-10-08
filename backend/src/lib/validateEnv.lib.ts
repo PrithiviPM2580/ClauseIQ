@@ -1,0 +1,17 @@
+import { z } from 'zod';
+import { APIError } from '@/lib/apiError.lib';
+
+export function validate<T>(schema: z.ZodType<T>, data: unknown): T {
+  const result = schema.safeParse(data);
+
+  if (!result.success) {
+    const issues = result.error.issues.map(issue => ({
+      field: issue.path.join('.'),
+      message: issue.message,
+    }));
+
+    throw new APIError(400, 'Validation Error', issues);
+  }
+
+  return result.data;
+}

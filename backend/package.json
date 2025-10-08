@@ -21,7 +21,7 @@
   },
   "license": "ISC",
   "author": "PPM",
-  "type": "module",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
