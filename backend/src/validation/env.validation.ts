@@ -28,6 +28,12 @@ export const envSchema = z.object({
     .string()
     .regex(/^\d+(s|m|h|d)$/, 'Must be in format like 15m, 1h, 7d')
     .default('7d'),
+  CORS_WHITELIST: z
+    .string()
+    .default('http://localhost:5173')
+    .transform(v =>
+      v.split(',').map(origin => origin.trim().replace(/\/$/, '').toLowerCase())
+    ),
 });
 
 export type Env = z.infer<typeof envSchema>;
