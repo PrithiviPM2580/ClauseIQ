@@ -1,3 +1,5 @@
+import { ZodTypeAny } from 'zod';
+
 declare global {
   namespace Express {
     interface Request {
@@ -21,3 +23,9 @@ export type MaybeAsyncRequestHandler = (
   res: Express.Response,
   next: Express.NextFunction
 ) => void | Promise<any>;
+
+export type ValidateSchema = {
+  body?: ZodTypeAny;
+  query?: ZodTypeAny;
+  params?: ZodTypeAny;
+};
