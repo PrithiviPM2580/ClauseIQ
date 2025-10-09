@@ -1,9 +1,7 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import config from '@/config/env.config';
-import type { Types } from 'mongoose';
 import { APIError } from '@/lib/apiError.lib';
-
-export type TokenPayload = { userId: Types.ObjectId };
+import { TokenPayload } from '@/@types';
 
 const signToken = <T extends object>(
   payload: T,

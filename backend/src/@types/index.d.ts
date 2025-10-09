@@ -1,5 +1,3 @@
-import { TokenPayload } from '@/lib/jwt.lib';
-
 declare global {
   namespace Express {
     interface Request {
@@ -7,3 +5,13 @@ declare global {
     }
   }
 }
+
+export type Role = 'admin' | 'user' | 'guest';
+export type TokenPayload = { userId: Types.ObjectId; role: Role };
+
+export type SuccessResponse<T> = {
+  ok: true;
+  status: 'success';
+  message: string;
+  data: T;
+};
