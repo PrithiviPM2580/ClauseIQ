@@ -29,6 +29,10 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only index.ts",
     "type-check": "tsc --noEmit",
     "test": "npm run test",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "prepare": "husky"
   },
   "lint-staged": {

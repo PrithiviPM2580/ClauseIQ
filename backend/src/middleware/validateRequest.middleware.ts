@@ -58,7 +58,11 @@ const validateRequest =
         }
         Object.assign(req.params, result.data);
       }
-    } catch (error) {}
+      return next();
+    } catch (error) {
+      logger.error('Unexpected Validation Error: ', { error });
+      next(error);
+    }
   };
 
 export default validateRequest;

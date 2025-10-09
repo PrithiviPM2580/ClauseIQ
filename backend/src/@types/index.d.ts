@@ -1,4 +1,5 @@
 import { ZodTypeAny } from 'zod';
+import { Types } from 'mongoose';
 
 declare global {
   namespace Express {
@@ -22,7 +23,7 @@ export type MaybeAsyncRequestHandler = (
   req: Express.Request,
   res: Express.Response,
   next: Express.NextFunction
-) => void | Promise<any>;
+) => void | Promise<unknown>;
 
 export type ValidateSchema = {
   body?: ZodTypeAny;
