@@ -15,3 +15,9 @@ export type SuccessResponse<T> = {
   message: string;
   data: T;
 };
+
+export type MaybeAsyncRequestHandler = (
+  req: Express.Request,
+  res: Express.Response,
+  next: Express.NextFunction
+) => void | Promise<any>;
