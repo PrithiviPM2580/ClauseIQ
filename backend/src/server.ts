@@ -1,11 +1,42 @@
-import app from '@/app';
 import config from '@/config/env.config';
 import logger from '@/lib/logger.lib';
+import app from '@/app';
+import {
+  connectToDatabase,
+  disconnectFromDatabase,
+} from '@/config/database.config';
 
-const PORT = config.PORT || 3001;
+const PORT = config.PORT || 30001;
 
-app.listen(PORT, () => {
-  logger.info(`🚀 Server is running on http://localhost:${PORT}`, {
-    service: 'server',
-  });
-});
+(async () => {
+  try {
+    await connectToDatabase();
+
+    const server = app.listen(PORT, () => {
+      logger.info(`🚀 Server running on http://localhost:${PORT}`);
+    });
+
+    const gracefulShutdown = async () => {
+      logger.warn('⚠️ Server shutting down...');
+      try {
+        await disconnectFromDatabase();
+      } catch (error) {
+        logger.error('Error during DB shutdown', { error });
+      } finally {
+        server.close(() => {
+          logger.info('✅ HTTP server closed');
+          process.exit(0);
+        });
+      }
+    };
+
+    process.on('SIGINT', gracefulShutdown);
+    process.on('SIGTERM', gracefulShutdown);
+  } catch (error) {
+    logger.error('❌ Error starting server', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+    });
+    process.exit(1);
+  }
+})();

@@ -34,6 +34,18 @@ export const envSchema = z.object({
     .transform(v =>
       v.split(',').map(origin => origin.trim().replace(/\/$/, '').toLowerCase())
     ),
+  DB_NAME: z.string().min(1),
+  APP_NAME: z.string().min(1),
+  DATABASE_URL: z.string().min(1),
+  WHITELIST_ADMIN: z
+    .string()
+    .default('')
+    .transform(v =>
+      v
+        .split(',')
+        .map(email => email.trim().toLowerCase())
+        .filter(email => email.length > 0)
+    ),
 });
 
 export type Env = z.infer<typeof envSchema>;

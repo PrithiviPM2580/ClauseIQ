@@ -14,6 +14,10 @@ const envs = {
   JWT_ACCESS_TOKEN_EXPIRATION: process.env.JWT_ACCESS_TOKEN_EXPIRATION,
   JWT_REFRESH_TOKEN_EXPIRATION: process.env.JWT_REFRESH_TOKEN_EXPIRATION,
   CORS_WHITELIST: process.env.CORS_WHITELIST,
+  DB_NAME: process.env.DB_NAME,
+  APP_NAME: process.env.APP_NAME,
+  DATABASE_URL: process.env.DATABASE_URL,
+  WHITELIST_ADMIN: process.env.WHITELIST_ADMIN,
 };
 
 const config = validate(envSchema, envs);
