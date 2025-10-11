@@ -5,7 +5,9 @@ on:
     workflows: ["CI"]
     types:
       - completed
-
+permissions:
+  actions: read
+  contents: read
 jobs:
   Deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
