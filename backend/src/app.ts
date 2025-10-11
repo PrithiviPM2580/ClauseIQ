@@ -5,8 +5,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import corsOptions from '@/lib/cors.lib';
 import compressionMiddleware from '@/middleware/compression.middleware';
-import logger from './lib/logger.lib';
-import globalErrorHandler from './middleware/globalErrorHandler.middleware';
+import logger from '@/lib/logger.lib';
+import globalErrorHandler from '@/middleware/globalErrorHandler.middleware';
 
 const app: Express = express();
 

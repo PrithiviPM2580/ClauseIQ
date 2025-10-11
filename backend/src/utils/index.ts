@@ -1,4 +1,4 @@
-import { SuccessResponse } from '@/@types';
+import { SuccessResponse } from '@//@types';
 import logger from '@/lib/logger.lib';
 import type { Response } from 'express';
 import { Types } from 'mongoose';
