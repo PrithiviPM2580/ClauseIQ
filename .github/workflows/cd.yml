@@ -13,28 +13,27 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Download frontend artifact
+        uses: dawidd6/action-download-artifact@v3
         with:
-          node-version: "18"
-
-      - name: Download Frontend Build (artifact)
-        uses: actions/download-artifact@v4
-        with:
+          workflow: CI.yml
           name: frontend-dist
           path: frontend/dist
+          workflow_conclusion: success
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download Backend Build (artifact)
-        uses: actions/download-artifact@v4
+      - name: Download backend artifact
+        uses: dawidd6/action-download-artifact@v3
         with:
+          workflow: CI.yml
           name: backend-dist
           path: backend/dist
+          workflow_conclusion: success
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Copy frontend build to backend public directory
+      - name: Copy frontend build into backend public folder
         run: |
           rm -rf backend/public
           mkdir -p backend/public
@@ -42,7 +41,7 @@ jobs:
 
       - name: Deploy to Render
         run: |
-          echo "Triggering Render deployment..."
+          echo "🚀 Triggering Render deployment..."
           curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
             -H "Accept: application/json" \
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
