@@ -22,23 +22,23 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install and Build Frontend
-        run: |
-          cd frontend
-          npm ci
-          npm run build
+      - name: Download Frontend Build (artifact)
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-dist
+          path: frontend/dist
+
+      - name: Download Backend Build (artifact)
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-dist
+          path: backend/dist
 
       - name: Copy frontend build to backend public directory
         run: |
           rm -rf backend/public
           mkdir -p backend/public
           cp -r frontend/dist/* backend/public/
-
-      - name: Install and Build Backend
-        run: |
-          cd backend
-          npm ci
-          npm run build
 
       - name: Deploy to Render
         run: |
