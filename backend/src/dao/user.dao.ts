@@ -2,6 +2,7 @@ import { UserDocument } from '@/models/user.model';
 import UserModel from '@/models/user.model';
 import { CreateUser } from '@/@types';
 import TokenModel, { IToken } from '@/models/token.model';
+import { Types } from 'mongoose';
 
 export const createUser = async (
   userdata: CreateUser
@@ -29,4 +30,8 @@ export const isUserByEmailOrUsernameExist = async (
 
 export const createToken = async (data: IToken) => {
   return await TokenModel.create(data);
+};
+
+export const clearRefreshToken = async (token?: Types.ObjectId) => {
+  return await TokenModel.deleteOne({ token });
 };

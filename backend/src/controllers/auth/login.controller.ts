@@ -11,7 +11,11 @@ const loginController = async (req: Request, res: Response): Promise<void> => {
 
   cookies.set(res, 'refreshToken', refreshToken);
 
-  successResponse(res, { user, accessToken }, 'User logged in successfully');
+  successResponse(
+    res,
+    { user, accessToken, refreshToken },
+    'User logged in successfully'
+  );
 };
 
 export default loginController;

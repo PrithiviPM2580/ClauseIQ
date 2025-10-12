@@ -1,4 +1,5 @@
 import {
+  clearRefreshToken,
   createToken,
   createUser,
   findUserByEmailOrUsername,
@@ -9,6 +10,7 @@ import { generateAccessToken, generateRefreshToken } from '@/lib/jwt.lib';
 import logger from '@/lib/logger.lib';
 import { generateMongooseId } from '@/utils';
 import { Login, Register } from '@/validation/auth.validation';
+import { Types } from 'mongoose';
 
 export const signUpService = async (data: Register) => {
   const { email, username, password } = data;
@@ -93,4 +95,21 @@ export const loginService = async (data: Login) => {
     accessToken,
     refreshToken,
   };
+};
+
+export const logoutService = async (
+  userId?: Types.ObjectId
+): Promise<boolean> => {
+  if (!userId) {
+    logger.warn('No userId provided for logout');
+    throw new APIError(400, 'UserId is required for logout');
+  }
+
+  const isRefreshTokenCleared = await clearRefreshToken(userId);
+
+  if (!isRefreshTokenCleared.acknowledged) {
+    logger.error(`Failed to clear refresh token for userId: ${userId}`);
+    throw new APIError(500, 'Failed to logout user');
+  }
+  return true;
 };

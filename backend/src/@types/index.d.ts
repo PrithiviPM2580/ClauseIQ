@@ -29,7 +29,7 @@ export type SuccessResponse<T> = {
 export type MaybeAsyncRequestHandler = (
   req: Request,
   res: Response,
-  next?: NextFunction
+  next: NextFunction
 ) => void | Promise<unknown>;
 
 export type ValidateSchema = {
