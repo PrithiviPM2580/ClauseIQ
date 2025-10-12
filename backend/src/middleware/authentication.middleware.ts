@@ -26,7 +26,10 @@ const authenticate =
       const payload = verifyAccessToken(accessToken) as TokenPayload;
       req.user = payload;
 
-      if (allowedRoles.length > 0 && !allowedRoles.includes(payload.role)) {
+      if (
+        allowedRoles.length > 0 &&
+        !allowedRoles.includes(payload.role || '')
+      ) {
         logger.error(`Access denied for role: ${payload.role}`);
         return next(new APIError(403, 'Forbidden - Insufficient role'));
       }

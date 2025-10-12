@@ -8,7 +8,7 @@ import corsOptions from '@/lib/cors.lib';
 import compressionMiddleware from '@/middleware/compression.middleware';
 import logger from '@/lib/logger.lib';
 import globalErrorHandler from '@/middleware/globalErrorHandler.middleware';
-
+import routes from '@/routes/index.route';
 const app: Express = express();
 
 app.use(helmet());
@@ -23,6 +23,8 @@ app.use(
     stream: { write: message => logger.info(message.trim()) },
   })
 );
+
+app.use(routes);
 
 app.use(globalErrorHandler);
 

@@ -1,5 +1,7 @@
 import { ZodTypeAny } from 'zod';
 import { Types } from 'mongoose';
+import { IUser, UserDocument } from '@/models/user.model';
+import type { Request, Response, NextFunction } from 'express';
 
 declare global {
   namespace Express {
@@ -10,7 +12,12 @@ declare global {
 }
 
 export type Role = 'admin' | 'user' | 'guest';
-export type TokenPayload = { userId: Types.ObjectId; role: Role };
+export type TokenPayload = { userId?: Types.ObjectId; role?: Role };
+
+export type CreateUser = Pick<
+  UserDocument,
+  'email' | 'password' | 'username' | '_id'
+>;
 
 export type SuccessResponse<T> = {
   ok: true;
@@ -20,9 +27,9 @@ export type SuccessResponse<T> = {
 };
 
 export type MaybeAsyncRequestHandler = (
-  req: Express.Request,
-  res: Express.Response,
-  next: Express.NextFunction
+  req: Request,
+  res: Response,
+  next?: NextFunction
 ) => void | Promise<unknown>;
 
 export type ValidateSchema = {

@@ -18,7 +18,7 @@ const apiOptions: IRateLimiterOptions = {
   blockDuration: 120,
 };
 const authOptions: IRateLimiterOptions = {
-  points: 50,
+  points: 10,
   duration: 60,
   blockDuration: 300,
 };
