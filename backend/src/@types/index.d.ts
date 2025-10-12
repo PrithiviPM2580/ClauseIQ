@@ -1,6 +1,6 @@
 import { ZodTypeAny } from 'zod';
 import { Types } from 'mongoose';
-import { IUser, UserDocument } from '@/models/user.model';
+import { UserDocument } from '@/models/user.model';
 import type { Request, Response, NextFunction } from 'express';
 
 declare global {
