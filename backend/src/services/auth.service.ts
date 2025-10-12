@@ -1,13 +1,14 @@
 import {
   createToken,
   createUser,
+  findUserByEmailOrUsername,
   isUserByEmailOrUsernameExist,
 } from '@/dao/user.dao';
 import { APIError } from '@/lib/apiError.lib';
 import { generateAccessToken, generateRefreshToken } from '@/lib/jwt.lib';
 import logger from '@/lib/logger.lib';
 import { generateMongooseId } from '@/utils';
-import { Register } from '@/validation/auth.validation';
+import { Login, Register } from '@/validation/auth.validation';
 
 export const signUpService = async (data: Register) => {
   const { email, username, password } = data;
@@ -41,6 +42,46 @@ export const signUpService = async (data: Register) => {
   await createToken({
     token: refreshToken,
     user: userId,
+  });
+
+  return {
+    user: {
+      _id: user._id,
+      email: user.email,
+      username: user.username,
+    },
+    accessToken,
+    refreshToken,
+  };
+};
+
+export const loginService = async (data: Login) => {
+  const { identifier, password } = data;
+
+  const user = await findUserByEmailOrUsername(identifier);
+
+  if (!user) {
+    logger.warn(`No user found with identifier: ${identifier}`);
+    throw new APIError(404, 'Invalid user credentials');
+  }
+
+  if (!user.comparePassword) {
+    throw new APIError(500, 'User authentication method not available');
+  }
+
+  const isPasswordMatch = await user.comparePassword(password);
+  if (!isPasswordMatch) {
+    logger.warn(`Invalid password for user: ${identifier}`);
+    throw new APIError(404, 'Invalid user credentials');
+  }
+
+  const userId = user._id;
+  const refreshToken = generateRefreshToken({ userId });
+  const accessToken = generateAccessToken({ userId });
+
+  await createToken({
+    token: refreshToken,
+    user: user._id,
   });
 
   return {

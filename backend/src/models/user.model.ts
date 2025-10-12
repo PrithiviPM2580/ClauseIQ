@@ -9,6 +9,8 @@ export interface IUser {
   displayName?: string;
   profilePicture?: string;
   isPremium: boolean;
+
+  comparePassword(enteredPassword?: string): Promise<boolean>;
 }
 
 export type UserDocument = HydratedDocument<IUser>;

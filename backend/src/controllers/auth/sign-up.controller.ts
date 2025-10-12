@@ -4,7 +4,7 @@ import { successResponse } from '@/utils';
 import { Register } from '@/validation/auth.validation';
 import type { Request, Response } from 'express';
 
-const signupController = async (req: Request, res: Response) => {
+const signupController = async (req: Request, res: Response): Promise<void> => {
   const { user, accessToken, refreshToken } = await signUpService(
     req.body as Register
   );
