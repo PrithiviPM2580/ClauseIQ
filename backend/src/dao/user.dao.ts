@@ -4,6 +4,7 @@ import { CreateUser } from '@/@types';
 import TokenModel, { IToken } from '@/models/token.model';
 import { Types } from 'mongoose';
 import { Google } from '@/validation/auth.validation';
+import { UpdateUserBody } from '@/validation/user.validation';
 
 export const createUser = async (
   userdata: CreateUser
@@ -65,4 +66,12 @@ export const deleteToken = async (token: string): Promise<boolean> => {
 
 export const findUserByIdLean = async (userId: Types.ObjectId) => {
   return await UserModel.findById(userId).lean();
+};
+
+export const updateUser = (userId: Types.ObjectId, data: UpdateUserBody) => {
+  return UserModel.findByIdAndUpdate(userId, data, { new: true });
+};
+
+export const deleteUser = async (userId: Types.ObjectId) => {
+  return await UserModel.findByIdAndDelete(userId);
 };
