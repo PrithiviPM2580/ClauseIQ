@@ -1,3 +1,4 @@
+import { googleCallbackController } from '@/controllers/auth/google.controller';
 import loginController from '@/controllers/auth/login.controller';
 import logoutController from '@/controllers/auth/logout.controller';
 import signupController from '@/controllers/auth/sign-up.controller';
@@ -10,6 +11,7 @@ import {
   registerValidationSchema,
 } from '@/validation/auth.validation';
 import { Router } from 'express';
+import passport from 'passport';
 
 const router = Router();
 
@@ -29,6 +31,18 @@ router.route('/logout').delete(
   rateLimiter(limiters.auth, req => req.ip as string),
   authenticate,
   asyncHandler(logoutController)
+);
+
+router
+  .route('/api/v1/auth/google')
+  .get(passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.route('/api/v1/auth/google/callback').get(
+  passport.authenticate('google', {
+    session: false,
+    failureRedirect: '/api/v1/auth/google/failure',
+  }),
+  googleCallbackController
 );
 
 export default router;

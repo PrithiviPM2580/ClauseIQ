@@ -3,7 +3,7 @@ import type { Types } from 'mongoose';
 
 export interface IToken {
   token: string;
-  user: Types.ObjectId;
+  user?: Types.ObjectId;
 }
 
 const tokenSchema = new Schema<IToken>({

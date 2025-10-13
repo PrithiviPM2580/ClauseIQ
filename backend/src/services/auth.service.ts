@@ -1,3 +1,4 @@
+import { TokenPayload } from '@/@types';
 import {
   clearRefreshToken,
   createGoogleUser,
@@ -143,4 +144,24 @@ export const googleVerifyService = async (data: Google) => {
   });
 
   return newUser;
+};
+
+export const googleService = async (user: TokenPayload) => {
+  if (!user) {
+    logger.error('Google authentication failed: No user data provided');
+    throw new APIError(401, 'Authentication failed');
+  }
+  const { userId } = user;
+  const accessToken = generateAccessToken({ userId });
+  const refreshToken = generateRefreshToken({ userId });
+
+  await createToken({
+    token: refreshToken,
+    user: userId,
+  });
+  return {
+    userId,
+    accessToken,
+    refreshToken,
+  };
 };
