@@ -34,10 +34,10 @@ router.route('/logout').delete(
 );
 
 router
-  .route('/api/v1/auth/google')
+  .route('/google')
   .get(passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-router.route('/api/v1/auth/google/callback').get(
+router.route('/google/callback').get(
   passport.authenticate('google', {
     session: false,
     failureRedirect: '/api/v1/auth/google/failure',

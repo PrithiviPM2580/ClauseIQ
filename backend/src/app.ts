@@ -9,6 +9,7 @@ import compressionMiddleware from '@/middleware/compression.middleware';
 import logger from '@/lib/logger.lib';
 import globalErrorHandler from '@/middleware/globalErrorHandler.middleware';
 import routes from '@/routes/index.route';
+import passport from '@/lib/passport.lib';
 const app: Express = express();
 
 app.use(helmet());
@@ -25,6 +26,8 @@ app.use(
 );
 
 app.use(routes);
+
+app.use(passport.initialize());
 
 app.use(globalErrorHandler);
 

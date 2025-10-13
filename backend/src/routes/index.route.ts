@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import path from 'path';
+import fs from 'fs';
 import authRoute from '@/routes/auth.routes';
 
 const router = Router();
@@ -30,8 +31,22 @@ router.use((req, res, next) => {
     return next();
   }
 
-  // For all other routes, serve the SPA
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  // Check if index.html exists before trying to serve it
+  const indexPath = path.join(__dirname, '../public/index.html');
+
+  if (fs.existsSync(indexPath)) {
+    // File exists, serve the SPA
+    res.sendFile(indexPath);
+  } else {
+    // File doesn't exist (development environment)
+    res.status(404).json({
+      message:
+        'Frontend not built. This route will serve the SPA in production.',
+      path: req.path,
+      suggestion: 'Build your frontend and place dist files in backend/public/',
+      note: 'In production, your CI/CD should copy frontend dist to backend/public/',
+    });
+  }
 });
 
 export default router;

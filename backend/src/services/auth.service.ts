@@ -147,11 +147,13 @@ export const googleVerifyService = async (data: Google) => {
 };
 
 export const googleService = async (user: TokenPayload) => {
-  if (!user) {
-    logger.error('Google authentication failed: No user data provided');
+  const { userId } = user;
+
+  if (!user || !userId) {
+    logger.error('Google authentication failed: No userId in token payload');
     throw new APIError(401, 'Authentication failed');
   }
-  const { userId } = user;
+
   const accessToken = generateAccessToken({ userId });
   const refreshToken = generateRefreshToken({ userId });
 
