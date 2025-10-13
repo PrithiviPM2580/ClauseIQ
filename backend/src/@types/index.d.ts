@@ -37,3 +37,22 @@ export type ValidateSchema = {
   query?: ZodTypeAny;
   params?: ZodTypeAny;
 };
+
+interface IRisk {
+  risk: string;
+  explanation: string;
+  severity: 'low' | 'medium' | 'high';
+}
+
+interface IOpportunity {
+  opportunity: string;
+  explanation: string;
+  impact: 'low' | 'medium' | 'high';
+}
+
+interface ICompensationStructure {
+  baseSalary: string;
+  bonuses: string;
+  equity: string;
+  otherBenefits: string;
+}
