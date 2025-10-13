@@ -62,3 +62,7 @@ export const deleteToken = async (token: string): Promise<boolean> => {
   const result = await TokenModel.deleteOne({ token });
   return result.deletedCount > 0;
 };
+
+export const findUserByIdLean = async (userId: Types.ObjectId) => {
+  return await UserModel.findById(userId).lean();
+};

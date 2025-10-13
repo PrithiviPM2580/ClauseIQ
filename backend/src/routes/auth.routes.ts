@@ -30,7 +30,7 @@ router.route('/login').post(
 
 router.route('/logout').delete(
   rateLimiter(limiters.auth, req => req.ip as string),
-  authenticate,
+  authenticate(),
   asyncHandler(logoutController)
 );
 

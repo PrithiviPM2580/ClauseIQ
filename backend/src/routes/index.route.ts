@@ -2,6 +2,7 @@ import { Router } from 'express';
 import path from 'path';
 import fs from 'fs';
 import authRoute from '@/routes/auth.routes';
+import userRoute from '@/routes/user.routes';
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.get('/health', (_req, res) => {
 });
 
 router.use('/api/v1/auth', authRoute);
+router.use('/api/v1/users', userRoute);
 
 // Catch-all route for SPA - only for non-API routes
 router.use((req, res, next) => {

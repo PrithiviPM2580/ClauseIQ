@@ -12,6 +12,7 @@ import routes from '@/routes/index.route';
 import passport from '@/lib/passport.lib';
 const app: Express = express();
 
+app.set('trust proxy', true);
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(compressionMiddleware);
