@@ -1,15 +1,18 @@
 import {
   clearRefreshToken,
+  createGoogleUser,
   createToken,
   createUser,
+  findOne,
   findUserByEmailOrUsername,
+  findUserByGoogleId,
   isUserByEmailOrUsernameExist,
 } from '@/dao/user.dao';
 import { APIError } from '@/lib/apiError.lib';
 import { generateAccessToken, generateRefreshToken } from '@/lib/jwt.lib';
 import logger from '@/lib/logger.lib';
 import { generateMongooseId } from '@/utils';
-import { Login, Register } from '@/validation/auth.validation';
+import { Google, Login, Register } from '@/validation/auth.validation';
 import { Types } from 'mongoose';
 
 export const signUpService = async (data: Register) => {
@@ -112,4 +115,32 @@ export const logoutService = async (
     throw new APIError(500, 'Failed to logout user');
   }
   return true;
+};
+
+export const googleVerifyService = async (data: Google) => {
+  const { email, displayName, profilePicture, googleId } = data;
+
+  // 1. Check if user already linked with Google ID
+  let user = await findUserByGoogleId(googleId);
+  if (user) return user;
+
+  // 2. Check if user exists by email (previous signup)
+  if (email) {
+    user = await findOne(email);
+    if (user) {
+      user.googleId = googleId;
+      await user.save();
+      return user;
+    }
+  }
+
+  // 3. Otherwise create new Google user
+  const newUser = await createGoogleUser({
+    email,
+    googleId,
+    displayName,
+    profilePicture,
+  });
+
+  return newUser;
 };

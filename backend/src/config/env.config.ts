@@ -18,6 +18,9 @@ const envs = {
   APP_NAME: process.env.APP_NAME,
   DATABASE_URL: process.env.DATABASE_URL,
   WHITELIST_ADMIN: process.env.WHITELIST_ADMIN,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
 };
 
 const config = validate(envSchema, envs);

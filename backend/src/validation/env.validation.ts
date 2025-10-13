@@ -18,8 +18,10 @@ export const envSchema = z.object({
     .default('development'),
   LOCAL_URL: z.url().default('http://localhost:3000'),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-  JWT_ACCESS_TOKEN_SECRET: z.string().min(1),
-  JWT_REFRESH_TOKEN_SECRET: z.string().min(1),
+  JWT_ACCESS_TOKEN_SECRET: z.string().min(1, 'Access Token Secret is required'),
+  JWT_REFRESH_TOKEN_SECRET: z
+    .string()
+    .min(1, 'Refresh Token Secret is required'),
   JWT_ACCESS_TOKEN_EXPIRATION: z
     .string()
     .regex(/^\d+(s|m|h|d)$/, 'Must be in format like 15m, 1h, 7d')
@@ -34,9 +36,9 @@ export const envSchema = z.object({
     .transform(v =>
       v.split(',').map(origin => origin.trim().replace(/\/$/, '').toLowerCase())
     ),
-  DB_NAME: z.string().min(1),
-  APP_NAME: z.string().min(1),
-  DATABASE_URL: z.string().min(1),
+  DB_NAME: z.string().min(1, 'Database name is required'),
+  APP_NAME: z.string().min(1, 'App name is required'),
+  DATABASE_URL: z.string().min(1, 'Database URL is required'),
   WHITELIST_ADMIN: z
     .string()
     .default('')
@@ -46,6 +48,9 @@ export const envSchema = z.object({
         .map(email => email.trim().toLowerCase())
         .filter(email => email.length > 0)
     ),
+  GOOGLE_CLIENT_ID: z.string().min(1, 'Client ID is required'),
+  GOOGLE_CLIENT_SECRET: z.string().min(1, 'Client Secret is required'),
+  GOOGLE_REDIRECT_URI: z.url('Must be a valid URL'),
 });
 
 export type Env = z.infer<typeof envSchema>;

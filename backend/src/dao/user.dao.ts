@@ -3,6 +3,7 @@ import UserModel from '@/models/user.model';
 import { CreateUser } from '@/@types';
 import TokenModel, { IToken } from '@/models/token.model';
 import { Types } from 'mongoose';
+import { Google } from '@/validation/auth.validation';
 
 export const createUser = async (
   userdata: CreateUser
@@ -34,4 +35,20 @@ export const createToken = async (data: IToken) => {
 
 export const clearRefreshToken = async (token?: Types.ObjectId) => {
   return await TokenModel.deleteOne({ token });
+};
+
+export const findUserByGoogleId = async (
+  googleId?: string
+): Promise<UserDocument | null> => {
+  return UserModel.findOne({ googleId }).select('+password');
+};
+
+export const findOne = async (email: string): Promise<UserDocument | null> => {
+  return UserModel.findOne({ email });
+};
+
+export const createGoogleUser = async (
+  userData: Google
+): Promise<UserDocument> => {
+  return await UserModel.create(userData);
 };
