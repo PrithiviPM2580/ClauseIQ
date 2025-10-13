@@ -2,7 +2,7 @@ import winston from 'winston';
 import config from '@/config/env.config';
 import util from 'util';
 
-const { combine, timestamp, printf, colorize, errors } = winston.format;
+const { combine, timestamp, printf, colorize } = winston.format;
 
 const transports: winston.transport[] = [];
 
@@ -45,7 +45,7 @@ if (config.NODE_ENV !== 'production' && config.NODE_ENV !== 'test') {
 
 const logger = winston.createLogger({
   level: config.LOG_LEVEL || 'info',
-  format: combine(timestamp(), errors({ stack: true })),
+  format: customFormat,
   transports,
   silent: config.NODE_ENV === 'test',
 });

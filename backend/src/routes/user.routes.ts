@@ -16,7 +16,7 @@ router.route('/me').get(
   asyncHandler(getUserController)
 );
 
-router.route('/me').get(
+router.route('/me').patch(
   rateLimiter(limiters.api, req => req.user?.userId?.toString() ?? 'aynomous'),
   validateRequest({ body: updateValidationSchema }),
   authenticate(),
@@ -25,7 +25,6 @@ router.route('/me').get(
 
 router.route('/me').delete(
   rateLimiter(limiters.api, req => req.user?.userId?.toString() ?? 'aynomous'),
-  validateRequest({ body: updateValidationSchema }),
   authenticate(),
   asyncHandler(deleteUserController)
 );

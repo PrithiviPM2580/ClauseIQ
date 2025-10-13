@@ -115,12 +115,16 @@ export const logoutService = async (
     throw new APIError(400, 'UserId is required for logout');
   }
 
+  console.log('Attempting to clear refresh token for userId:', userId);
   const isRefreshTokenCleared = await clearRefreshToken(userId);
+  console.log('Clear refresh token result:', isRefreshTokenCleared);
 
   if (!isRefreshTokenCleared.acknowledged) {
     logger.error(`Failed to clear refresh token for userId: ${userId}`);
     throw new APIError(500, 'Failed to logout user');
   }
+
+  logger.info(`Successfully cleared refresh token for userId: ${userId}`);
   return true;
 };
 

@@ -34,8 +34,8 @@ export const createToken = async (data: IToken) => {
   return await TokenModel.create(data);
 };
 
-export const clearRefreshToken = async (token?: Types.ObjectId) => {
-  return await TokenModel.deleteOne({ token });
+export const clearRefreshToken = async (userId?: Types.ObjectId) => {
+  return await TokenModel.deleteOne({ user: userId });
 };
 
 export const findUserByGoogleId = async (
