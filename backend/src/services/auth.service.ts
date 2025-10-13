@@ -4,13 +4,19 @@ import {
   createGoogleUser,
   createToken,
   createUser,
+  deleteToken,
   findOne,
   findUserByEmailOrUsername,
   findUserByGoogleId,
   isUserByEmailOrUsernameExist,
+  tokenExists,
 } from '@/dao/user.dao';
 import { APIError } from '@/lib/apiError.lib';
-import { generateAccessToken, generateRefreshToken } from '@/lib/jwt.lib';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from '@/lib/jwt.lib';
 import logger from '@/lib/logger.lib';
 import { generateMongooseId } from '@/utils';
 import { Google, Login, Register } from '@/validation/auth.validation';
@@ -166,4 +172,24 @@ export const googleService = async (user: TokenPayload) => {
     accessToken,
     refreshToken,
   };
+};
+
+export const refreshTokenService = async (token: string) => {
+  const jwtPayload = verifyRefreshToken(token) as TokenPayload;
+
+  const isTokenExists = await tokenExists(token);
+  if (!isTokenExists) {
+    throw new APIError(401, 'Invalid refresh token');
+  }
+
+  const newAccessToken = generateAccessToken({ userId: jwtPayload.userId });
+  const newRefreshToken = generateRefreshToken({ userId: jwtPayload.userId });
+
+  await deleteToken(newRefreshToken);
+  await createToken({
+    token: newRefreshToken,
+    user: new Types.ObjectId(jwtPayload.userId),
+  });
+
+  return { newAccessToken, newRefreshToken };
 };

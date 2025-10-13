@@ -52,3 +52,13 @@ export const createGoogleUser = async (
 ): Promise<UserDocument> => {
   return await UserModel.create(userData);
 };
+
+export const tokenExists = async (token: string): Promise<boolean> => {
+  const exist = await TokenModel.exists({ token }).lean();
+  return exist !== null;
+};
+
+export const deleteToken = async (token: string): Promise<boolean> => {
+  const result = await TokenModel.deleteOne({ token });
+  return result.deletedCount > 0;
+};

@@ -1,6 +1,7 @@
 import { googleCallbackController } from '@/controllers/auth/google.controller';
 import loginController from '@/controllers/auth/login.controller';
 import logoutController from '@/controllers/auth/logout.controller';
+import refreshTokenController from '@/controllers/auth/refresh-token.controller';
 import signupController from '@/controllers/auth/sign-up.controller';
 import asyncHandler from '@/middleware/asyncHandler.middleware';
 import authenticate from '@/middleware/authentication.middleware';
@@ -31,6 +32,11 @@ router.route('/logout').delete(
   rateLimiter(limiters.auth, req => req.ip as string),
   authenticate,
   asyncHandler(logoutController)
+);
+
+router.route('/refresh-token').post(
+  rateLimiter(limiters.auth, req => req.ip as string),
+  asyncHandler(refreshTokenController)
 );
 
 router
