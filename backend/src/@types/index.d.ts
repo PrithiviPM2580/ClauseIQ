@@ -56,3 +56,19 @@ interface ICompensationStructure {
   equity: string;
   otherBenefits: string;
 }
+
+interface IUserFeedback {
+  rating: number;
+  comments: string;
+}
+
+interface IFinancialTerms {
+  description: string;
+  details: string[];
+}
+
+interface IAIMetadata {
+  model: string;
+  confidenceScore?: number;
+  tokensUsed?: number;
+}

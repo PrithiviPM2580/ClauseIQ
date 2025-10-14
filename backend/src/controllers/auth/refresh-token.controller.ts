@@ -10,7 +10,7 @@ const refreshTokenController = async (
   next: NextFunction
 ): Promise<void> => {
   const refreshToken = cookies.get(req, 'refreshToken');
-  console.log('Refresh Token:', refreshToken);
+
   if (!refreshToken) {
     return next(new APIError(401, 'No refresh token provided'));
   }

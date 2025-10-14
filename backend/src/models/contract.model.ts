@@ -1,6 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { UserDocument } from './user.model';
-import { IRisk, IOpportunity, ICompensationStructure } from '@/@types';
+import {
+  IRisk,
+  IOpportunity,
+  ICompensationStructure,
+  IUserFeedback,
+  IFinancialTerms,
+} from '@/@types';
 
 export interface IContract extends Document {
   userId: UserDocument['_id'];
@@ -19,23 +25,13 @@ export interface IContract extends Document {
   performanceMetrics: string[];
   intellectualPropertyClauses: string | string[];
   version: number;
-  userFeedback: {
-    rating: number;
-    comments: string;
-  };
-  customFields: { [key: string]: string };
+  userFeedback: IUserFeedback;
+  customFields: Record<string, string>;
   expirationDate?: Date;
   language: string;
-  aiMetadata: {
-    model: string;
-    confidenceScore?: number;
-    tokensUsed?: number;
-  };
+  aiMetadata: string;
   contractType: string;
-  financialTerms?: {
-    description: string;
-    details: string[];
-  };
+  financialTerms?: IFinancialTerms;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -47,17 +43,25 @@ const contractSchema = new Schema<IContract>(
 
     risks: [
       {
-        risk: String,
-        explanation: String,
-        severity: { type: String, enum: ['low', 'medium', 'high'] },
+        risk: { type: String },
+        explanation: { type: String },
+        severity: {
+          type: String,
+          enum: ['low', 'medium', 'high'],
+          required: true,
+        },
       },
     ],
 
     opportunities: [
       {
-        opportunity: String,
-        explanation: String,
-        impact: { type: String, enum: ['low', 'medium', 'high'] },
+        opportunity: { type: String },
+        explanation: { type: String },
+        impact: {
+          type: String,
+          enum: ['low', 'medium', 'high'],
+          required: true,
+        },
       },
     ],
 
@@ -71,10 +75,10 @@ const contractSchema = new Schema<IContract>(
     overallScore: { type: Number, min: 0, max: 100 },
 
     compensationStructure: {
-      baseSalary: String,
-      bonuses: String,
-      equity: String,
-      otherBenefits: String,
+      baseSalary: { type: String },
+      bonuses: { type: String },
+      equity: { type: String },
+      otherBenefits: { type: String },
     },
 
     performanceMetrics: [{ type: String }],
@@ -82,13 +86,10 @@ const contractSchema = new Schema<IContract>(
     intellectualPropertyClauses: {
       type: Schema.Types.Mixed,
       validate: {
-        validator: function (v: any) {
-          return (
-            typeof v === 'string' ||
-            (Array.isArray(v) && v.every(item => typeof item === 'string'))
-          );
-        },
-        message: (props: { value: any }) =>
+        validator: (v: unknown): boolean =>
+          typeof v === 'string' ||
+          (Array.isArray(v) && v.every(item => typeof item === 'string')),
+        message: (props: { value: unknown }) =>
           `${props.value} is not a valid string or array of strings!`,
       },
     },
@@ -110,11 +111,7 @@ const contractSchema = new Schema<IContract>(
       default: 'en',
     },
 
-    aiMetadata: {
-      model: { type: String, default: 'gemini-pro' },
-      confidenceScore: { type: Number, min: 0, max: 1 },
-      tokensUsed: Number,
-    },
+    aiMetadata: { type: String, default: 'gemini-pro' },
 
     contractType: {
       type: String,
@@ -123,13 +120,16 @@ const contractSchema = new Schema<IContract>(
     },
 
     financialTerms: {
-      description: String,
-      details: [String],
+      description: { type: String },
+      details: [{ type: String }],
     },
   },
   { timestamps: true }
 );
 
+// 📈 Index for faster queries by user and contract type
 contractSchema.index({ userId: 1, contractType: 1 });
 
-export default mongoose.model<IContract>('Contract', contractSchema);
+const ContractModel = mongoose.model<IContract>('Contract', contractSchema);
+
+export default ContractModel;
