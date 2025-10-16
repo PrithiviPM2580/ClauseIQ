@@ -51,6 +51,11 @@ export const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1, 'Client ID is required'),
   GOOGLE_CLIENT_SECRET: z.string().min(1, 'Client Secret is required'),
   GOOGLE_REDIRECT_URI: z.url('Must be a valid URL'),
+  UPSTASH_REDIS_REST_URL: z.string().min(1, 'Upstash Redis URL is required'),
+  UPSTASH_REDIS_REST_TOKEN: z
+    .string()
+    .min(1, 'Upstash Redis Token is required'),
+  GOOGLE_API_KEY: z.string().min(1, 'Google API Key is required'),
 });
 
 export type Env = z.infer<typeof envSchema>;
