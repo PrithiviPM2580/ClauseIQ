@@ -9,7 +9,10 @@ import logger from '@/lib/logger.lib';
 import { APIError } from '@/lib/apiError.lib';
 import { TokenPayload } from '@/@types';
 import { analyzeContractWithAI } from '@/ai/analyzeContractWithAi.ai';
-import { createContractAnalysis } from '@/dao/contract.dao';
+import {
+  createContractAnalysis,
+  getUserContractsLean,
+} from '@/dao/contract.dao';
 
 export const detectTypeService = async (
   req: Request,
@@ -65,4 +68,8 @@ export const analyzeContractService = async (
   );
 
   return savedAnalysis;
+};
+
+export const getUserContractService = async (userId: Types.ObjectId) => {
+  return await getUserContractsLean(userId);
 };

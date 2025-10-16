@@ -1,5 +1,6 @@
 import analizeContractController from '@/controllers/contract/analyzeContract.controller';
 import detectTypeController from '@/controllers/contract/detectType.controller';
+import getUserContractController from '@/controllers/contract/getUserContract.controller';
 import asyncHandler from '@/middleware/asyncHandler.middleware';
 import authenticate from '@/middleware/authentication.middleware';
 import { uploadSingle } from '@/middleware/multer.middleware';
@@ -25,7 +26,11 @@ router.route('/analyze').post(
   asyncHandler(analizeContractController)
 );
 
-router.route('/user-contracts').get();
+router.route('/user-contracts').get(
+  authenticate(),
+  rateLimiter(limiters.api, req => req.user!.userId!.toString()),
+  asyncHandler(getUserContractController)
+);
 
 router.route('/:id').get();
 

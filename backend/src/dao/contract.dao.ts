@@ -17,3 +17,7 @@ export const createContractAnalysis = async (
   });
   return savedAnalysis;
 };
+
+export const getUserContractsLean = async (userId: Types.ObjectId) => {
+  return await ContractModel.find({ userId }).sort({ createAt: -1 }).lean();
+};
