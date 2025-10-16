@@ -12,6 +12,7 @@ import { analyzeContractWithAI } from '@/ai/analyzeContractWithAi.ai';
 import {
   createContractAnalysis,
   getUserContractsLean,
+  getContractById,
 } from '@/dao/contract.dao';
 
 export const detectTypeService = async (
@@ -72,4 +73,26 @@ export const analyzeContractService = async (
 
 export const getUserContractService = async (userId: Types.ObjectId) => {
   return await getUserContractsLean(userId);
+};
+
+export const getContractByIdService = async (
+  id: Types.ObjectId,
+  userId: Types.ObjectId
+) => {
+  const cachedContracts = await redis.get(`contract:${id}`);
+  if (cachedContracts) {
+    logger.info('Contract found in cache');
+    return cachedContracts;
+  }
+
+  const contract = await getContractById(id, userId);
+
+  if (!contract) {
+    logger.error('Contract not found');
+    throw new APIError(404, 'Contract not found');
+  }
+
+  await redis.set(`contract:${id}`, contract, { ex: 3600 });
+
+  return contract;
 };

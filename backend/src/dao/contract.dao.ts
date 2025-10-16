@@ -21,3 +21,10 @@ export const createContractAnalysis = async (
 export const getUserContractsLean = async (userId: Types.ObjectId) => {
   return await ContractModel.find({ userId }).sort({ createAt: -1 }).lean();
 };
+
+export const getContractById = async (
+  id: Types.ObjectId,
+  userId: Types.ObjectId
+) => {
+  return await ContractModel.findOne({ _id: id, userId }).lean();
+};

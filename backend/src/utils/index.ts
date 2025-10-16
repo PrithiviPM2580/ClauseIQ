@@ -61,3 +61,7 @@ export const generateAIResponse = async (
     throw new APIError(500, 'Error generating AI response');
   }
 };
+
+export const isValidMongoId = (id: string): boolean => {
+  return Types.ObjectId.isValid(id);
+};
