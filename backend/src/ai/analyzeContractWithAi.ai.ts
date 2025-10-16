@@ -1,4 +1,27 @@
+import logger from '@/lib/logger.lib';
 import { generateAIResponse } from '@/utils';
+
+interface IRisk {
+  risk: string;
+  explanation: string;
+}
+
+interface IOpportunity {
+  opportunity: string;
+  explanation: string;
+}
+
+interface FallbackAnalysis {
+  risks: IRisk[];
+  opportunities: IOpportunity[];
+  summary: string;
+}
+
+const fallbackAnalysis: FallbackAnalysis = {
+  risks: [],
+  opportunities: [],
+  summary: 'Error analyzing contract',
+};
 
 export const analyzeContractWithAI = async (
   contractText: string,
@@ -83,35 +106,13 @@ export const analyzeContractWithAI = async (
     const analysis = JSON.parse(text);
     return analysis;
   } catch (error) {
-    console.log('Error parsing JSON:', error);
+    logger.error('Error parsing AI response:', error);
   }
-
-  interface IRisk {
-    risk: string;
-    explanation: string;
-  }
-
-  interface IOpportunity {
-    opportunity: string;
-    explanation: string;
-  }
-
-  interface FallbackAnalysis {
-    risks: IRisk[];
-    opportunities: IOpportunity[];
-    summary: string;
-  }
-
-  const fallbackAnalysis: FallbackAnalysis = {
-    risks: [],
-    opportunities: [],
-    summary: 'Error analyzing contract',
-  };
 
   // Extract risks
   const risksMatch = text.match(/"risks"\s*:\s*\[([\s\S]*?)\]/);
   if (risksMatch) {
-    fallbackAnalysis.risks = risksMatch[1].split('},').map(risk => {
+    fallbackAnalysis.risks = risksMatch![1].split('},').map(risk => {
       const riskMatch = risk.match(/"risk"\s*:\s*"([^"]*)"/);
       const explanationMatch = risk.match(/"explanation"\s*:\s*"([^"]*)"/);
       return {
@@ -124,7 +125,7 @@ export const analyzeContractWithAI = async (
   //Extact opportunities
   const opportunitiesMatch = text.match(/"opportunities"\s*:\s*\[([\s\S]*?)\]/);
   if (opportunitiesMatch) {
-    fallbackAnalysis.opportunities = opportunitiesMatch[1]
+    fallbackAnalysis.opportunities = opportunitiesMatch![1]
       .split('},')
       .map(opportunity => {
         const opportunityMatch = opportunity.match(
@@ -143,7 +144,7 @@ export const analyzeContractWithAI = async (
   // Extract summary
   const summaryMatch = text.match(/"summary"\s*:\s*"([^"]*)"/);
   if (summaryMatch) {
-    fallbackAnalysis.summary = summaryMatch[1];
+    fallbackAnalysis.summary = summaryMatch![1];
   }
 
   return fallbackAnalysis;

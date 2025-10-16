@@ -20,6 +20,7 @@ export default [
     rules: {
       'prettier/prettier': 'error', // run Prettier as an ESLint rule
       'no-console': 'warn',
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
   {

@@ -1,7 +1,6 @@
 import redis from '@/config/redis.config';
 import { APIError } from '@/lib/apiError.lib';
 import logger from '@/lib/logger.lib';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const pdf = require('pdf-parse');
 
 const extractTextFromPDF = async (fileKey: string): Promise<string> => {
