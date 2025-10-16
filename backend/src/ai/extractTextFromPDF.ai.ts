@@ -1,9 +1,10 @@
 import redis from '@/config/redis.config';
 import { APIError } from '@/lib/apiError.lib';
 import logger from '@/lib/logger.lib';
-import { getDocument } from 'pdfjs-dist';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pdf = require('pdf-parse');
 
-const extractTextFromPDF = async (fileKey: string) => {
+const extractTextFromPDF = async (fileKey: string): Promise<string> => {
   const fileData = await redis.get(fileKey);
 
   if (!fileData) {
@@ -11,38 +12,35 @@ const extractTextFromPDF = async (fileKey: string) => {
     throw new APIError(404, 'File not found or expired');
   }
 
-  let fileBuffer: Uint8Array;
+  let fileBuffer: Buffer;
+
+  // Handle Redis binary or JSON-encoded buffers
   if (Buffer.isBuffer(fileData)) {
-    fileBuffer = new Uint8Array(fileData);
-  } else if (typeof fileData === 'object' && fileData !== null) {
-    const bufferData = fileData as { type: string; data: number[] };
-    if (bufferData.type === 'Buffer' && Array.isArray(bufferData.data)) {
-      fileBuffer = new Uint8Array(bufferData.data);
-    } else {
-      logger.error('Invalid file data format in Redis for key:', fileKey);
-      throw new APIError(500, 'Invalid file data format');
+    fileBuffer = fileData;
+  } else if (typeof fileData === 'string') {
+    try {
+      const parsed = JSON.parse(fileData);
+      if (parsed?.type === 'Buffer' && Array.isArray(parsed.data)) {
+        fileBuffer = Buffer.from(parsed.data);
+      } else {
+        throw new Error('Invalid Buffer JSON format');
+      }
+    } catch (err) {
+      logger.error('Failed to parse Redis file data:', err);
+      throw new APIError(500, 'Invalid file data format in Redis');
     }
   } else {
-    logger.error('Unexpected file data type in Redis for key:', fileKey);
-    throw new APIError(500, 'Unexpected file data type');
+    logger.error('Unexpected file data type in Redis:', typeof fileData);
+    throw new APIError(500, 'Unexpected file data type in Redis');
   }
 
-  const pdf = await getDocument({ data: fileBuffer }).promise;
-  let text = '';
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    text +=
-      content.items
-        .map(item => {
-          if ('str' in item) {
-            return item.str;
-          }
-          return '';
-        })
-        .join(' ') + '\n';
+  try {
+    const data = await pdf(fileBuffer);
+    return data.text;
+  } catch (err) {
+    logger.error('Failed to extract text from PDF:', err);
+    throw new APIError(500, 'Failed to extract text from PDF');
   }
-  return text;
 };
 
 export default extractTextFromPDF;
