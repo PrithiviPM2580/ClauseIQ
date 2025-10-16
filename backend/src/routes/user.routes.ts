@@ -11,20 +11,20 @@ import { Router } from 'express';
 const router = Router();
 
 router.route('/me').get(
-  rateLimiter(limiters.api, req => req.user?.userId?.toString() ?? 'aynomous'),
+  rateLimiter(limiters.api, req => req.user!.userId!.toString()),
   authenticate(),
   asyncHandler(getUserController)
 );
 
 router.route('/me').patch(
-  rateLimiter(limiters.api, req => req.user?.userId?.toString() ?? 'aynomous'),
+  rateLimiter(limiters.api, req => req.user!.userId!.toString()),
   validateRequest({ body: updateValidationSchema }),
   authenticate(),
   asyncHandler(updateUserController)
 );
 
 router.route('/me').delete(
-  rateLimiter(limiters.api, req => req.user?.userId?.toString() ?? 'aynomous'),
+  rateLimiter(limiters.api, req => req.user!.userId!.toString()),
   authenticate(),
   asyncHandler(deleteUserController)
 );

@@ -3,7 +3,7 @@ import { detectTypeService } from '@/services/contract.service';
 import { successResponse } from '@/utils';
 import type { Request, Response, NextFunction } from 'express';
 
-const detectTypeContoller = async (
+const detectTypeController = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -13,6 +13,11 @@ const detectTypeContoller = async (
   if (!userId) {
     logger.error('User ID not found in request');
     return next(new Error('User not authenticated'));
+  }
+
+  if (!req.file) {
+    logger.error('No file uploaded');
+    return next(new Error('No file uploaded'));
   }
 
   const detectedType = await detectTypeService(req, userId);
@@ -29,4 +34,4 @@ const detectTypeContoller = async (
   );
 };
 
-export default detectTypeContoller;
+export default detectTypeController;

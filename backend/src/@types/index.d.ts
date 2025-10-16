@@ -12,7 +12,11 @@ declare global {
 }
 
 export type Role = 'admin' | 'user' | 'guest';
-export type TokenPayload = { userId?: Types.ObjectId; role?: Role };
+export type TokenPayload = {
+  userId?: Types.ObjectId;
+  role?: Role;
+  isPremium?: boolean;
+};
 
 export type CreateUser = Pick<
   UserDocument,
