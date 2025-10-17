@@ -36,26 +36,19 @@ export const dateNow = () => {
   return Date.now();
 };
 
-const GEMINI_MODEL = 'gemini-pro-flash';
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 export const generateAIResponse = async (
   prompt: string,
-  model: string = GEMINI_MODEL,
-  contents: Record<string, unknown> = {},
-  options: Record<string, unknown> = {}
+  model: string = GEMINI_MODEL
 ) => {
   try {
     const response = await ai.models.generateContent({
       model,
-      contents: {
-        ...contents,
-        parts: [{ text: prompt }],
-      },
-      ...options,
+      contents: prompt,
     });
-    const text = response.text ?? '';
 
-    return text.trim();
+    return response.text;
   } catch (error) {
     logger.error('Error generating AI response: ', error);
     throw new APIError(500, 'Error generating AI response');

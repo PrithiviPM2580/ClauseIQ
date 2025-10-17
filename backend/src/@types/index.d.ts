@@ -76,3 +76,15 @@ interface IAIMetadata {
   confidenceScore?: number;
   tokensUsed?: number;
 }
+
+interface FallbackAnalysis {
+  risks: IRisk[];
+  opportunities: IOpportunity[];
+  summary: string;
+}
+
+const fallbackAnalysis: FallbackAnalysis = {
+  risks: [],
+  opportunities: [],
+  summary: 'Error analyzing contract',
+};

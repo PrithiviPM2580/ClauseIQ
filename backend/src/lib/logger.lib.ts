@@ -2,7 +2,7 @@ import winston from 'winston';
 import config from '@/config/env.config';
 import util from 'util';
 
-const { combine, timestamp, printf, colorize } = winston.format;
+const { combine, timestamp, printf } = winston.format;
 
 const transports: winston.transport[] = [];
 
@@ -17,11 +17,13 @@ const colors = {
 };
 
 const customFormat = combine(
-  colorize({ all: true }),
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   printf(({ timestamp, level, message, service, ...meta }) => {
-    const metaStr = Object.keys(meta).length
-      ? `\n${colors.green(util.inspect(meta, { depth: null, colors: true }))}`
+    const cleanMeta = Object.fromEntries(
+      Object.entries(meta).filter(([key]) => typeof key === 'string')
+    );
+    const metaStr = Object.keys(cleanMeta).length
+      ? `\n${colors.green(util.inspect(cleanMeta, { depth: null, colors: true }))}`
       : '';
     return `${colors.blue(`${timestamp}`)} [${level}] ${colors.magenta(`[APP: ${service ?? 'app'}]`)}: ${message} ${metaStr}`;
   })

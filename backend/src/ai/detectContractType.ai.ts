@@ -12,7 +12,7 @@ const detectContractType = async (contractText: string): Promise<string> => {
 
   const result = await generateAIResponse(prompt);
 
-  return result;
+  return result!;
 };
 
 export default detectContractType;

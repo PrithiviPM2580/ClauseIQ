@@ -20,7 +20,22 @@ export const detectTypeService = async (
   userId: Types.ObjectId
 ) => {
   const fileKey = `file:${userId.toString()}:${dateNow()}`;
-  await redis.set(fileKey, req.file?.buffer);
+
+  // Store buffer properly in Redis
+  if (!req.file?.buffer) {
+    throw new APIError(400, 'No file buffer found');
+  }
+
+  console.log('Storing file buffer, size:', req.file.buffer.length);
+  console.log('File mimetype:', req.file.mimetype);
+
+  await redis.set(
+    fileKey,
+    JSON.stringify({
+      type: 'Buffer',
+      data: Array.from(req.file.buffer),
+    })
+  );
   await redis.expire(fileKey, 3600);
 
   const pdfText = await extractTextFromPDF(fileKey);
@@ -48,6 +63,7 @@ export const analyzeContractService = async (
   await redis.expire(fileKey, 3600);
 
   const pdfText = await extractTextFromPDF(fileKey);
+  console.log('Extracted PDF text length:', pdfText.length);
   let analysis;
 
   if (user.isPremium) {

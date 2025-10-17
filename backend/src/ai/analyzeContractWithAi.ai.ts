@@ -4,11 +4,13 @@ import { generateAIResponse } from '@/utils';
 interface IRisk {
   risk: string;
   explanation: string;
+  severity?: 'low' | 'medium' | 'high';
 }
 
 interface IOpportunity {
   opportunity: string;
   explanation: string;
+  impact?: 'low' | 'medium' | 'high';
 }
 
 interface FallbackAnalysis {
@@ -20,7 +22,7 @@ interface FallbackAnalysis {
 const fallbackAnalysis: FallbackAnalysis = {
   risks: [],
   opportunities: [],
-  summary: 'Error analyzing contract',
+  summary: '',
 };
 
 export const analyzeContractWithAI = async (
@@ -95,15 +97,30 @@ export const analyzeContractWithAI = async (
   let text = response;
 
   // remove any markdown formatting
-  text = text.replace(/```json\n?|\n?```/g, '').trim();
+  text = text!.replace(/```json\n?|\n?```/g, '').trim();
 
   try {
-    // Attempt to fix common JSON errors
     text = text.replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3'); // Ensure all keys are quoted
     text = text.replace(/:\s*"([^"]*)"([^,}\]])/g, ': "$1"$2'); // Ensure all string values are properly quoted
     text = text.replace(/,\s*}/g, '}'); // Remove trailing commas
 
     const analysis = JSON.parse(text);
+    if (Array.isArray(analysis.risks)) {
+      analysis.risks = analysis.risks.map((r: IRisk) => ({
+        ...r,
+        severity: r.severity?.toLowerCase?.(),
+      }));
+    }
+
+    if (Array.isArray(analysis.opportunities)) {
+      analysis.opportunities = analysis.opportunities.map(
+        (o: IOpportunity) => ({
+          ...o,
+          impact: o.impact?.toLowerCase?.(),
+        })
+      );
+    }
+
     return analysis;
   } catch (error) {
     logger.error('Error parsing AI response:', error);

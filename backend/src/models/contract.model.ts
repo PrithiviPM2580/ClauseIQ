@@ -97,8 +97,8 @@ const contractSchema = new Schema<IContract>(
     version: { type: Number, default: 1 },
 
     userFeedback: {
-      rating: { type: Number, min: 1, max: 5, default: 0 },
-      comments: { type: String, default: '' },
+      rating: { type: Number, min: 1, max: 5 },
+      comments: { type: String },
     },
 
     customFields: { type: Map, of: String },
